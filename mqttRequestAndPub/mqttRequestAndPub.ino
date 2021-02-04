@@ -38,8 +38,8 @@ unsigned long delayInterval = 1000*60;
 MD_Parola myDisplay = MD_Parola(HARDWARE_TYPE, CS_PIN, MAX_DEVICES);
  
 // Connect to the WiFi
-const char* ssid = "goodmanwifi2.4";
-const char* password = "goodman1234";
+const char* ssid = "MaxWiFi";
+const char* password = "4153887413";
 const char* mqtt_server = "67.169.167.183";
 boolean messageRecived = true;
  
