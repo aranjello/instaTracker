@@ -29,9 +29,9 @@
 // Define hardware type, size, and output pins:
 #define HARDWARE_TYPE MD_MAX72XX::FC16_HW
 #define MAX_DEVICES 4
-#define CS_PIN D3
-const char* UNIQUE_ID = "dfg";
-const int buttonPin = D2;
+#define CS_PIN D6
+const char* UNIQUE_ID = "agoodman1996";
+const int buttonPin = D6;
 unsigned long delayStart = 0; // the time the delay started
 unsigned long delayInterval = 1000*60;
 // Create a new instance of the MD_Parola class with hardware SPI connection:
