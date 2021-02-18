@@ -11,7 +11,7 @@
 #define HARDWARE_TYPE MD_MAX72XX::FC16_HW
 #define MAX_DEVICES 4
 #define CS_PIN    D6
-#define unique_ID "0"
+#define unique_ID "1"
 
 WiFiManager wm; // global wm instance
 ESP8266WebServer server(80);
@@ -37,7 +37,7 @@ bool doTime = false;
 long currentTime;
 long hourTimer = 0;
 
-const char* mqtt_server = "67.169.167.183";
+const char* mqtt_server = "goodTimes.mywire.org";
 
 char postForms[4096];
 char text[50];
@@ -57,7 +57,7 @@ void reconnect() {
   while (!client.connected()) {
     Serial.print("Attempting MQTT connection...");
     // Attempt to connect
-    if (client.connect("0","agoodman","Dinomug96")) {
+    if (client.connect(unique_ID,"agoodman","Dinomug96")) {
       Serial.println("connected");
       // ... and subscribe to topic
       client.subscribe(userName);
