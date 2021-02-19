@@ -36,13 +36,15 @@ def on_message(client, userdata, msg):
     print(msg.topic+" "+str(msg.payload))
     if(not(msg.payload.decode('ascii') in alreadyIn)):
         if(not(msg.payload.decode('ascii')) in alreadyList):
+	    print("added to queue and list")
             alreadyList.append(msg.payload.decode('ascii'))
             sendData(msg.payload.decode('ascii'))
         else:
             print("added to queue")
             alreadyIn.append(msg.payload.decode('ascii'))
             requestQueue.put(msg.payload.decode('ascii'))
-
+    else:
+	print("already in queue")
 client = mqtt.Client()
 client.on_connect = on_connect
 client.on_message = on_message
