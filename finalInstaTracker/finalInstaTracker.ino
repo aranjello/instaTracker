@@ -12,8 +12,8 @@
 #define HARDWARE_TYPE MD_MAX72XX::FC16_HW
 #define MAX_DEVICES 4
 #define CS_PIN    D6
-#define unique_ID "1"
-#define versionNum 1
+#define unique_ID ""
+#define versionNum 0
 
 WiFiManager wm; // global wm instance
 ESP8266WebServer server(80);
@@ -212,7 +212,7 @@ void setup() {
   std::vector<const char *> menu = {"wifi"};
   wm.setMenu(menu);
   wm.setClass("invert");
-  //wm.resetSettings();
+  wm.resetSettings();
   bool res = wm.autoConnect("AutoConnectAP","password");
   if(!res) {
     Serial.println("Failed to connect or hit timeout");
