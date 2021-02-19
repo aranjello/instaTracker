@@ -13,6 +13,8 @@
 #include <ESP8266HTTPClient.h>
 #include <ESP8266httpUpdate.h>
 
+#define versionNum 0      
+
 #ifndef APSSID
 #define APSSID "goodmanwifi2.4"
 #define APPSK  "goodman1234"
@@ -77,8 +79,9 @@ void loop() {
     ESPhttpUpdate.onEnd(update_finished);
     ESPhttpUpdate.onProgress(update_progress);
     ESPhttpUpdate.onError(update_error);
-
-    t_httpUpdate_return ret = ESPhttpUpdate.update(client, "http://goodtimes.mywire.org:5000/?version=3");
+    char stringUpdate[50];
+    sprintf(stringUpdate,"http://goodtimes.mywire.org:5000/?version=%d",versionNum);
+    t_httpUpdate_return ret = ESPhttpUpdate.update(client, stringUpdate);
 
     switch (ret) {
       case HTTP_UPDATE_FAILED:

@@ -12,9 +12,10 @@
 #define HARDWARE_TYPE MD_MAX72XX::FC16_HW
 #define MAX_DEVICES 4
 #define CS_PIN    D6
-#define unique_ID ""
-#define versionNum 0
+#define versionNum 1
 
+char stringUpdate[50];
+char unique_ID[50];
 WiFiManager wm; // global wm instance
 ESP8266WebServer server(80);
 
@@ -64,8 +65,8 @@ void update_error(int err) {
 
 bool updateFirware(){
     t_httpUpdate_return ret;
-     
-    ret=ESPhttpUpdate.update(espClient,("http://goodtimes.mywire.org:5000/?version="+versionNum));     // **************** This is the line that "does the business"   
+    sprintf(stringUpdate,"http://goodtimes.mywire.org:5000/?version=%d",versionNum);
+    ret=ESPhttpUpdate.update(espClient,stringUpdate);     // **************** This is the line that "does the business"   
     switch (ret) {
       case HTTP_UPDATE_FAILED:
         Serial.printf("HTTP_UPDATE_FAILD Error (%d): %s\n", ESPhttpUpdate.getLastError(), ESPhttpUpdate.getLastErrorString().c_str());
@@ -218,6 +219,7 @@ void setup() {
     Serial.println("Failed to connect or hit timeout");
     ESP.restart();
   }
+  sprintf(unique_ID,"%s",WiFi.macAddress().c_str());
   ESPhttpUpdate.onStart(update_started);
   ESPhttpUpdate.onEnd(update_finished);
   ESPhttpUpdate.onProgress(update_progress);
