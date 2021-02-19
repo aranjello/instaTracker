@@ -7,11 +7,13 @@
 #include <ArduinoJson.h>
 #include <ESP8266HTTPClient.h>
 #include <PubSubClient.h>
+#include <ESP8266httpUpdate.h>
 
 #define HARDWARE_TYPE MD_MAX72XX::FC16_HW
 #define MAX_DEVICES 4
 #define CS_PIN    D6
 #define unique_ID "1"
+#define versionNum 1
 
 WiFiManager wm; // global wm instance
 ESP8266WebServer server(80);
@@ -44,6 +46,41 @@ char text[50];
 char userName[50];
 bool flashing = true;
 
+void update_started() {
+  Serial.println("CALLBACK:  HTTP update process started");
+}
+
+void update_finished() {
+  Serial.println("CALLBACK:  HTTP update process finished");
+}
+
+void update_progress(int cur, int total) {
+  Serial.printf("CALLBACK:  HTTP update process at %d of %d bytes...\n", cur, total);
+}
+
+void update_error(int err) {
+  Serial.printf("CALLBACK:  HTTP update fatal error code %d\n", err);
+}
+
+bool updateFirware(){
+    t_httpUpdate_return ret;
+     
+    ret=ESPhttpUpdate.update(espClient,("http://goodtimes.mywire.org:5000/?version="+versionNum));     // **************** This is the line that "does the business"   
+    switch (ret) {
+      case HTTP_UPDATE_FAILED:
+        Serial.printf("HTTP_UPDATE_FAILD Error (%d): %s\n", ESPhttpUpdate.getLastError(), ESPhttpUpdate.getLastErrorString().c_str());
+        break;
+
+      case HTTP_UPDATE_NO_UPDATES:
+        Serial.println("HTTP_UPDATE_NO_UPDATES");
+        break;
+
+      case HTTP_UPDATE_OK:
+        Serial.println("HTTP_UPDATE_OK");
+        break;
+    }
+}
+
 void callback(char* topic, byte* payload, unsigned int length) {
   char* payloadString = (char*)payload;
   payloadString[length] = '\0';
@@ -70,6 +107,7 @@ void reconnect() {
     }
   }
 }
+
 
 void getTime(char *psz, bool f = true)
 // Code for reading clock time
@@ -180,6 +218,11 @@ void setup() {
     Serial.println("Failed to connect or hit timeout");
     ESP.restart();
   }
+  ESPhttpUpdate.onStart(update_started);
+  ESPhttpUpdate.onEnd(update_finished);
+  ESPhttpUpdate.onProgress(update_progress);
+  ESPhttpUpdate.onError(update_error);
+  updateFirware();
   // put your setup code here, to run once:
   HTTPClient http;
   // Send request
