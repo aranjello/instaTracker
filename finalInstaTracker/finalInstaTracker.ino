@@ -213,7 +213,7 @@ void setup() {
   std::vector<const char *> menu = {"wifi"};
   wm.setMenu(menu);
   wm.setClass("invert");
-  wm.resetSettings();
+  //wm.resetSettings();
   bool res = wm.autoConnect("AutoConnectAP","password");
   if(!res) {
     Serial.println("Failed to connect or hit timeout");
