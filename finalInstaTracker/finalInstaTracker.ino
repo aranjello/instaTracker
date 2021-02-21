@@ -12,7 +12,7 @@
 #define HARDWARE_TYPE MD_MAX72XX::FC16_HW
 #define MAX_DEVICES 4
 #define CS_PIN    D6
-#define versionNum 0
+#define versionNum 1
 
 char stringUpdate[50];
 char unique_ID[50];
@@ -214,7 +214,7 @@ void setup() {
   wm.setMenu(menu);
   wm.setClass("invert");
   //wm.resetSettings();
-  bool res = wm.autoConnect("AutoConnectAP","password");
+  bool res = wm.autoConnect("instaTracker","followers");
   if(!res) {
     Serial.println("Failed to connect or hit timeout");
     ESP.restart();
