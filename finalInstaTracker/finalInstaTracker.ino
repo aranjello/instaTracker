@@ -12,7 +12,7 @@
 #define HARDWARE_TYPE MD_MAX72XX::FC16_HW
 #define MAX_DEVICES 4
 #define CS_PIN    D6
-#define versionNum 1
+#define versionNum 0
 
 char stringUpdate[50];
 char unique_ID[50];

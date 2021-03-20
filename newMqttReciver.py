@@ -15,18 +15,18 @@ alreadyList = []
 
 def sendData(out):
     try:
-        print("getting data for :" + out)
+        print(str(datetime.now()) + " " + "getting data for :" + out)
         if(out in alreadyIn):
             alreadyIn.remove(out)
         profile = instaloader.Profile.from_username(L.context, out).followers                             
-        print(out + " " + str(profile))
+        print(str(datetime.now()) + " " + out + " " + str(profile))
         client.publish(out, payload=str(profile), qos=0, retain=False)
     except:
         client.publish(out, payload="error",qos=0,retain=False)
 
 # The callback for when the client receives a CONNACK response from the server.
 def on_connect(client, userdata, flags, rc):
-    print("Connected with result code "+str(rc))
+    print(str(datetime.now()) + " " + "Connected with result code "+str(rc))
     # Subscribing in on_connect() means that if we lose the connection and
     # reconnect then subscriptions will be renewed.
     client.subscribe("requestData")
@@ -36,15 +36,15 @@ def on_message(client, userdata, msg):
     print(msg.topic+" "+str(msg.payload))
     if(not(msg.payload.decode('ascii') in alreadyIn)):
         if(not(msg.payload.decode('ascii')) in alreadyList):
-            print("added to queue and list")
+            print(str(datetime.now()) + " " + "added to queue and list")
             alreadyList.append(msg.payload.decode('ascii'))
             sendData(msg.payload.decode('ascii'))
         else:
-            print("added to queue")
+            print(str(datetime.now()) + " " + "added to queue")
             alreadyIn.append(msg.payload.decode('ascii'))
             requestQueue.put(msg.payload.decode('ascii'))
     else:
-	    print("already in queue")
+	    print(str(datetime.now()) + " " + "already in queue")
 client = mqtt.Client()
 client.on_connect = on_connect
 client.on_message = on_message
@@ -53,8 +53,8 @@ client.username_pw_set("agoodman", password="Dinomug96")
 def waitForInternet():
     while True:
         try:
-            client.connect("67.169.167.183", 1883, 60)
-            print("connected")
+            client.connect("goodtimes.mywire.org", 1883, 60)
+            print(str(datetime.now()) + " " + "connected")
             return
         except:
             pass

@@ -30,7 +30,7 @@ int colors[][3] = {{250,0,0}
                   ,{255,255,255}
                   };
 int bewoowColors[][3] = {
-             {255,35,0}
+             {255,98,0}
             ,{0,173,173}
             ,{174,81,189}
             };
@@ -216,7 +216,7 @@ void loop() {
     strip.setBrightness(map(analogRead(A0),0,1023,0,255));
   }
   if(currColor == (sizeof(colors) / sizeof(colors[0])-1)){
-      if(currTime - lightTime > 100){
+      if(currTime - lightTime > 200){
         frame += 1;
         lightTime = millis();
       }
