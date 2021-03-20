@@ -29,10 +29,12 @@ MD_Parola P = MD_Parola(HARDWARE_TYPE, CS_PIN, MAX_DEVICES);
 
 bool firstResponse = false;
 bool firstLoop = true;
+bool errorOn = false;
 
 int timeTime = 60000;
 int instaTime = 60000;
 int lastCount = 0;
+int brightVal = 0;
 
 bool haveClock = false;
 bool doTime = false;
@@ -48,6 +50,9 @@ char userName[50];
 bool flashing = true;
 
 void update_started() {
+  sprintf(text,"update");
+  P.displayReset();
+  P.displayAnimate();
   Serial.println("CALLBACK:  HTTP update process started");
 }
 
@@ -64,6 +69,7 @@ void update_error(int err) {
 }
 
 bool updateFirware(){
+    
     t_httpUpdate_return ret;
     sprintf(stringUpdate,"http://goodtimes.mywire.org:5000/?version=%d",versionNum);
     ret=ESPhttpUpdate.update(espClient,stringUpdate);     // **************** This is the line that "does the business"   
@@ -85,9 +91,17 @@ bool updateFirware(){
 void callback(char* topic, byte* payload, unsigned int length) {
   char* payloadString = (char*)payload;
   payloadString[length] = '\0';
-  Serial.println("received message");
-  lastCount = atoi(payloadString);
-  sprintf(text,"%d",lastCount);
+  Serial.print("received message: ");
+  Serial.println(payloadString);
+  if(!strcmp("error",payloadString)){
+    Serial.println("got error");
+    sprintf(text,"error 1");
+    errorOn = true;
+  }else{
+    errorOn = false;
+    lastCount = atoi(payloadString);
+    sprintf(text,"%d",lastCount);
+  }
 }
 
 void reconnect() {
@@ -132,12 +146,14 @@ void handleRoot() {
     <form method=\"post\" enctype=\"application/x-www-form-urlencoded\" action=\"/postform/\">\
       <label for=\"fname\">Insta Username:</label><br>\
       <input type=\"text\" name=\"username\" value=\"%s\"><br><br>\
-      <label for=\"fname\">Have Clock?</label>\
+      <label for=\"fname\">Brightness:</label><br>\
+      <input type=\"number\" min=\"0\" max=\"15\" name=\"brightness\" value=\"%d\"><br><br>\
+      <label for=\"fname\">Display a Clock?</label>\
       <input type=\"checkbox\" id=\"vehicle1\" name=\"vehicle1\" value=\"Bike\" %s onclick=\"myFunction()\"><br><br>\
       <label for=\"fname\" id=\"text3\" style=\"display:none\">Insta time:</label><br>\
-      <input type=\"number\" id=\"text4\"step=\"any\" min=\"0\" name=\"hello\" value=\"%2f\" style=\"display:none\"><br><br>\
+      <input type=\"number\" min=\"0\" id=\"text4\"step=\"any\" min=\"0\" name=\"hello\" value=\"%.2f\" style=\"display:none\"><br><br>\
       <label for=\"fname\" id=\"text\" style=\"display:none\">Clock Time:</label><br>\
-      <input type=\"number\" id=\"text2\" step=\"any\" min=\"0\" name=\"new\" value=\"%2f\" style=\"display:none\"><br><br>\
+      <input type=\"number\" min=\"0\" id=\"text2\" step=\"any\" min=\"0\" name=\"new\" value=\"%.2f\" style=\"display:none\"><br><br>\
       <input type=\"submit\" value=\"Submit\">\
     </form>\
     <script>\
@@ -161,11 +177,12 @@ void handleRoot() {
       }\
     </script>\
   </body>\
-</html>",userName,(haveClock ? "checked":""),instaTime/60000.0,timeTime/60000.0);
+</html>",userName,brightVal,(haveClock ? "checked":""),instaTime/60000.0,timeTime/60000.0);
   server.send(200, "text/html", postForms);
 }
 
 void handleForm() {
+
   haveClock = false;
   if (server.method() == HTTP_POST) {
     String message = "POST form was:\n";
@@ -174,6 +191,10 @@ void handleForm() {
         haveClock = true;
       }
       Serial.println(haveClock);
+      if(server.argName(i) == "brightness"){
+        brightVal = server.arg(i).toInt();
+        P.setIntensity(brightVal);
+      }
       if(server.argName(i) == "hello"){
         //sprintf(text, "%s", server.arg(i).c_str());
         instaTime = server.arg(i).toFloat()*60000;
@@ -195,6 +216,8 @@ void handleForm() {
     Serial.println(message);
     sendMQTTRequest();
     firstResponse = true;
+    sprintf(text,"loading");
+    P.displayReset();
   }
 }
 
@@ -203,6 +226,17 @@ void handleNotFound() {
 }
 
 void setup() {
+  P.begin();
+  P.setIntensity(brightVal);
+  P.displayClear();
+  P.displayReset();
+  P.setTextAlignment(PA_CENTER);
+  P.setZoneEffect(0,true,PA_FLIP_UD);
+  P.setZoneEffect(0,true,PA_FLIP_LR);
+  P.setTextEffect(PA_NO_EFFECT,PA_NO_EFFECT);
+  P.setPause(0);
+  P.setSpeed(250);
+  P.setTextBuffer(text);
   sprintf(userName,"%s","Enter Username");
   sprintf(text,"%s","test");
   WiFi.mode(WIFI_STA); // explicitly set mode, esp defaults to STA+AP  
@@ -238,19 +272,8 @@ void setup() {
   Serial.println(offset);
   timeClient.begin();
   timeClient.setTimeOffset(offset);
-  P.begin();
-  P.setIntensity(0);
-  P.displayClear();
-  P.displayReset();
-  P.setTextAlignment(PA_CENTER);
-  P.setZoneEffect(0,true,PA_FLIP_UD);
-  P.setZoneEffect(0,true,PA_FLIP_LR);
-  P.setTextEffect(PA_SCROLL_RIGHT,PA_SCROLL_RIGHT);
-  P.setPause(0);
-  P.setSpeed(250);
   sprintf(text, "%s", WiFi.localIP().toString().c_str());
-  P.setTextBuffer(text);
-  
+  P.setTextEffect(PA_SCROLL_RIGHT,PA_SCROLL_RIGHT);
   server.on("/", handleRoot);
 
   server.on("/postform/", handleForm);
@@ -261,6 +284,7 @@ void setup() {
   client.setCallback(callback);
   firstResponse = false;
   currentTime = millis();
+  
 }
 
 void sendMQTTRequest(){
@@ -315,6 +339,9 @@ void loop() {
         }
       }
     }else{
+      if(!errorOn && lastCount != 0){
+         sprintf(text,"%d",lastCount);
+      }
       if(P.displayAnimate()){
           P.displayReset();
       }
