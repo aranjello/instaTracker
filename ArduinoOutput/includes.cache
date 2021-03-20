@@ -1,0 +1,312 @@
+[
+  {
+    "Sourcefile": null,
+    "Include": "",
+    "Includepath": "/home/aranjello/.arduino15/packages/esp8266/hardware/esp8266/2.7.4/cores/esp8266"
+  },
+  {
+    "Sourcefile": null,
+    "Include": "",
+    "Includepath": "/home/aranjello/.arduino15/packages/esp8266/hardware/esp8266/2.7.4/variants/d1_mini"
+  },
+  {
+    "Sourcefile": "/home/aranjello/Documents/instaTracker/ArduinoOutput/sketch/finalInstaTracker.ino.cpp",
+    "Include": "WiFiManager.h",
+    "Includepath": "/home/aranjello/Arduino/libraries/WiFiManager"
+  },
+  {
+    "Sourcefile": "/home/aranjello/Documents/instaTracker/ArduinoOutput/sketch/finalInstaTracker.ino.cpp",
+    "Include": "ESP8266WiFi.h",
+    "Includepath": "/home/aranjello/.arduino15/packages/esp8266/hardware/esp8266/2.7.4/libraries/ESP8266WiFi/src"
+  },
+  {
+    "Sourcefile": "/home/aranjello/Documents/instaTracker/ArduinoOutput/sketch/finalInstaTracker.ino.cpp",
+    "Include": "ESP8266WebServer.h",
+    "Includepath": "/home/aranjello/.arduino15/packages/esp8266/hardware/esp8266/2.7.4/libraries/ESP8266WebServer/src"
+  },
+  {
+    "Sourcefile": "/home/aranjello/Documents/instaTracker/ArduinoOutput/sketch/finalInstaTracker.ino.cpp",
+    "Include": "DNSServer.h",
+    "Includepath": "/home/aranjello/.arduino15/packages/esp8266/hardware/esp8266/2.7.4/libraries/DNSServer/src"
+  },
+  {
+    "Sourcefile": "/home/aranjello/Documents/instaTracker/ArduinoOutput/sketch/finalInstaTracker.ino.cpp",
+    "Include": "MD_Parola.h",
+    "Includepath": "/home/aranjello/Arduino/libraries/MD_Parola/src"
+  },
+  {
+    "Sourcefile": "/home/aranjello/Documents/instaTracker/ArduinoOutput/sketch/finalInstaTracker.ino.cpp",
+    "Include": "MD_MAX72xx.h",
+    "Includepath": "/home/aranjello/Arduino/libraries/MD_MAX72XX/src"
+  },
+  {
+    "Sourcefile": "/home/aranjello/Documents/instaTracker/ArduinoOutput/sketch/finalInstaTracker.ino.cpp",
+    "Include": "SPI.h",
+    "Includepath": "/home/aranjello/.arduino15/packages/esp8266/hardware/esp8266/2.7.4/libraries/SPI"
+  },
+  {
+    "Sourcefile": "/home/aranjello/Documents/instaTracker/ArduinoOutput/sketch/finalInstaTracker.ino.cpp",
+    "Include": "NTPClient.h",
+    "Includepath": "/home/aranjello/Arduino/libraries/NTPClient"
+  },
+  {
+    "Sourcefile": "/home/aranjello/Documents/instaTracker/ArduinoOutput/sketch/finalInstaTracker.ino.cpp",
+    "Include": "ArduinoJson.h",
+    "Includepath": "/home/aranjello/Arduino/libraries/ArduinoJson/src"
+  },
+  {
+    "Sourcefile": "/home/aranjello/Documents/instaTracker/ArduinoOutput/sketch/finalInstaTracker.ino.cpp",
+    "Include": "ESP8266HTTPClient.h",
+    "Includepath": "/home/aranjello/.arduino15/packages/esp8266/hardware/esp8266/2.7.4/libraries/ESP8266HTTPClient/src"
+  },
+  {
+    "Sourcefile": "/home/aranjello/Documents/instaTracker/ArduinoOutput/sketch/finalInstaTracker.ino.cpp",
+    "Include": "PubSubClient.h",
+    "Includepath": "/home/aranjello/Arduino/libraries/PubSubClient/src"
+  },
+  {
+    "Sourcefile": "/home/aranjello/Documents/instaTracker/ArduinoOutput/sketch/finalInstaTracker.ino.cpp",
+    "Include": "ESP8266httpUpdate.h",
+    "Includepath": "/home/aranjello/.arduino15/packages/esp8266/hardware/esp8266/2.7.4/libraries/ESP8266httpUpdate/src"
+  },
+  {
+    "Sourcefile": "/home/aranjello/Documents/instaTracker/ArduinoOutput/sketch/finalInstaTracker.ino.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/aranjello/Arduino/libraries/WiFiManager/WiFiManager.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/aranjello/.arduino15/packages/esp8266/hardware/esp8266/2.7.4/libraries/ESP8266WiFi/src/BearSSLHelpers.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/aranjello/.arduino15/packages/esp8266/hardware/esp8266/2.7.4/libraries/ESP8266WiFi/src/CertStoreBearSSL.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/aranjello/.arduino15/packages/esp8266/hardware/esp8266/2.7.4/libraries/ESP8266WiFi/src/ESP8266WiFi.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/aranjello/.arduino15/packages/esp8266/hardware/esp8266/2.7.4/libraries/ESP8266WiFi/src/ESP8266WiFiAP.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/aranjello/.arduino15/packages/esp8266/hardware/esp8266/2.7.4/libraries/ESP8266WiFi/src/ESP8266WiFiGeneric.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/aranjello/.arduino15/packages/esp8266/hardware/esp8266/2.7.4/libraries/ESP8266WiFi/src/ESP8266WiFiGratuitous.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/aranjello/.arduino15/packages/esp8266/hardware/esp8266/2.7.4/libraries/ESP8266WiFi/src/ESP8266WiFiMulti.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/aranjello/.arduino15/packages/esp8266/hardware/esp8266/2.7.4/libraries/ESP8266WiFi/src/ESP8266WiFiSTA-WPS.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/aranjello/.arduino15/packages/esp8266/hardware/esp8266/2.7.4/libraries/ESP8266WiFi/src/ESP8266WiFiSTA.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/aranjello/.arduino15/packages/esp8266/hardware/esp8266/2.7.4/libraries/ESP8266WiFi/src/ESP8266WiFiScan.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/aranjello/.arduino15/packages/esp8266/hardware/esp8266/2.7.4/libraries/ESP8266WiFi/src/WiFiClient.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/aranjello/.arduino15/packages/esp8266/hardware/esp8266/2.7.4/libraries/ESP8266WiFi/src/WiFiClientSecureAxTLS.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/aranjello/.arduino15/packages/esp8266/hardware/esp8266/2.7.4/libraries/ESP8266WiFi/src/WiFiClientSecureBearSSL.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/aranjello/.arduino15/packages/esp8266/hardware/esp8266/2.7.4/libraries/ESP8266WiFi/src/WiFiServer.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/aranjello/.arduino15/packages/esp8266/hardware/esp8266/2.7.4/libraries/ESP8266WiFi/src/WiFiServerSecureAxTLS.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/aranjello/.arduino15/packages/esp8266/hardware/esp8266/2.7.4/libraries/ESP8266WiFi/src/WiFiServerSecureBearSSL.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/aranjello/.arduino15/packages/esp8266/hardware/esp8266/2.7.4/libraries/ESP8266WiFi/src/WiFiUdp.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/aranjello/.arduino15/packages/esp8266/hardware/esp8266/2.7.4/libraries/ESP8266WebServer/src/detail/mimetable.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/aranjello/.arduino15/packages/esp8266/hardware/esp8266/2.7.4/libraries/DNSServer/src/DNSServer.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/aranjello/Arduino/libraries/MD_Parola/src/MD_PZone.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/aranjello/Arduino/libraries/MD_Parola/src/MD_Parola.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/aranjello/Arduino/libraries/MD_Parola/src/MD_Parola_Blinds.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/aranjello/Arduino/libraries/MD_Parola/src/MD_Parola_Close.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/aranjello/Arduino/libraries/MD_Parola/src/MD_Parola_Diag.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/aranjello/Arduino/libraries/MD_Parola/src/MD_Parola_Dissolve.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/aranjello/Arduino/libraries/MD_Parola/src/MD_Parola_Fade.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/aranjello/Arduino/libraries/MD_Parola/src/MD_Parola_Grow.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/aranjello/Arduino/libraries/MD_Parola/src/MD_Parola_HScroll.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/aranjello/Arduino/libraries/MD_Parola/src/MD_Parola_Mesh.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/aranjello/Arduino/libraries/MD_Parola/src/MD_Parola_Open.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/aranjello/Arduino/libraries/MD_Parola/src/MD_Parola_Print.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/aranjello/Arduino/libraries/MD_Parola/src/MD_Parola_Random.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/aranjello/Arduino/libraries/MD_Parola/src/MD_Parola_Scan.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/aranjello/Arduino/libraries/MD_Parola/src/MD_Parola_Slice.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/aranjello/Arduino/libraries/MD_Parola/src/MD_Parola_Sprite.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/aranjello/Arduino/libraries/MD_Parola/src/MD_Parola_VScroll.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/aranjello/Arduino/libraries/MD_Parola/src/MD_Parola_Wipe.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/aranjello/Arduino/libraries/MD_MAX72XX/src/MD_MAX72xx.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/aranjello/Arduino/libraries/MD_MAX72XX/src/MD_MAX72xx_buf.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/aranjello/Arduino/libraries/MD_MAX72XX/src/MD_MAX72xx_font.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/aranjello/Arduino/libraries/MD_MAX72XX/src/MD_MAX72xx_pix.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/aranjello/.arduino15/packages/esp8266/hardware/esp8266/2.7.4/libraries/SPI/SPI.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/aranjello/Arduino/libraries/NTPClient/NTPClient.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/aranjello/.arduino15/packages/esp8266/hardware/esp8266/2.7.4/libraries/ESP8266HTTPClient/src/ESP8266HTTPClient.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/aranjello/Arduino/libraries/PubSubClient/src/PubSubClient.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/aranjello/.arduino15/packages/esp8266/hardware/esp8266/2.7.4/libraries/ESP8266httpUpdate/src/ESP8266httpUpdate.cpp",
+    "Include": "",
+    "Includepath": null
+  }
+]

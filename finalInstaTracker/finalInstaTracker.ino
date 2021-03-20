@@ -12,7 +12,7 @@
 #define HARDWARE_TYPE MD_MAX72XX::FC16_HW
 #define MAX_DEVICES 4
 #define CS_PIN    D6
-#define versionNum 0
+#define versionNum 1
 
 char stringUpdate[50];
 char unique_ID[50];
@@ -38,9 +38,11 @@ int brightVal = 0;
 
 bool haveClock = false;
 bool doTime = false;
+bool responseWait = false;
 
 long currentTime;
 long hourTimer = 0;
+long responseTimer = 0;
 
 const char* mqtt_server = "goodTimes.mywire.org";
 
@@ -93,6 +95,10 @@ void callback(char* topic, byte* payload, unsigned int length) {
   payloadString[length] = '\0';
   Serial.print("received message: ");
   Serial.println(payloadString);
+  if(!strcmp("recieved",payloadString)){
+    Serial.println("got response to message");
+    responseWait = false;
+  }
   if(!strcmp("error",payloadString)){
     Serial.println("got error");
     sprintf(text,"error 1");
@@ -102,6 +108,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
     lastCount = atoi(payloadString);
     sprintf(text,"%d",lastCount);
   }
+  sendMQTTRequest("gotMessage");
 }
 
 void reconnect() {
@@ -214,7 +221,7 @@ void handleForm() {
     }
     server.send(200, "text/html", "<meta http-equiv = \"refresh\" content = \"0;url = \/\" />");
     Serial.println(message);
-    sendMQTTRequest();
+    sendMQTTRequest(userName);
     firstResponse = true;
     sprintf(text,"loading");
     P.displayReset();
@@ -287,14 +294,18 @@ void setup() {
   
 }
 
-void sendMQTTRequest(){
+void sendMQTTRequest(char* request){
   Serial.println("request attempt");
   if(!client.connected()){
     reconnect();
   }
-  boolean rc = client.publish("requestData", userName);
+  boolean rc = client.publish("requestData", request);
   //sprintf(text,"%d",millis());
   Serial.println("sent request");
+  if(strcmp(request,"gotMessage")){
+    responseWait = true;
+    responseTimer = millis();
+  }
 }
 
 void loop() {
@@ -306,7 +317,7 @@ void loop() {
       reconnect();
     }
     if(millis() - hourTimer > 3600000){
-      sendMQTTRequest();
+      sendMQTTRequest(userName);
       hourTimer = millis();
     }
     P.setTextEffect(PA_NO_EFFECT,PA_NO_EFFECT);
@@ -345,6 +356,10 @@ void loop() {
       if(P.displayAnimate()){
           P.displayReset();
       }
+    }
+    if(responseWait && (millis() - responseTimer > 30000)){
+      Serial.println("no response,resend");
+      sendMQTTRequest(userName);
     }
   }else{
     if(P.displayAnimate()){

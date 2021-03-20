@@ -1,0 +1,12 @@
+{
+  "additionalFiles": "",
+  "builtInLibrariesFolders": "/home/aranjello/Downloads/arduino-1.8.13/libraries",
+  "builtInToolsFolders": "/home/aranjello/Downloads/arduino-1.8.13/tools-builder,/home/aranjello/Downloads/arduino-1.8.13/hardware/tools/avr,/home/aranjello/.arduino15/packages",
+  "compiler.optimization_flags": "",
+  "customBuildProperties": "build.path=/home/aranjello/Documents/instaTracker/ArduinoOutput,build.warn_data_percentage=75,runtime.tools.mklittlefs.path=/home/aranjello/.arduino15/packages/esp8266/tools/mklittlefs/2.5.0-4-fe5bb56,runtime.tools.mklittlefs-2.5.0-4-fe5bb56.path=/home/aranjello/.arduino15/packages/esp8266/tools/mklittlefs/2.5.0-4-fe5bb56,runtime.tools.python3.path=/home/aranjello/.arduino15/packages/esp8266/tools/python3/3.7.2-post1,runtime.tools.python3-3.7.2-post1.path=/home/aranjello/.arduino15/packages/esp8266/tools/python3/3.7.2-post1,runtime.tools.xtensa-lx106-elf-gcc.path=/home/aranjello/.arduino15/packages/esp8266/tools/xtensa-lx106-elf-gcc/2.5.0-4-b40a506,runtime.tools.xtensa-lx106-elf-gcc-2.5.0-4-b40a506.path=/home/aranjello/.arduino15/packages/esp8266/tools/xtensa-lx106-elf-gcc/2.5.0-4-b40a506,runtime.tools.mkspiffs.path=/home/aranjello/.arduino15/packages/esp8266/tools/mkspiffs/2.5.0-4-b40a506,runtime.tools.mkspiffs-2.5.0-4-b40a506.path=/home/aranjello/.arduino15/packages/esp8266/tools/mkspiffs/2.5.0-4-b40a506",
+  "fqbn": "esp8266:esp8266:d1_mini:xtal=80,vt=flash,exception=legacy,ssl=all,eesz=4M2M,ip=lm2f,dbg=Disabled,lvl=None____,wipe=none,baud=921600",
+  "hardwareFolders": "/home/aranjello/Downloads/arduino-1.8.13/hardware,/home/aranjello/.arduino15/packages",
+  "otherLibrariesFolders": "/home/aranjello/Arduino/libraries",
+  "runtime.ide.version": "10813",
+  "sketchLocation": "/home/aranjello/Documents/instaTracker/finalInstaTracker/finalInstaTracker.ino"
+}
