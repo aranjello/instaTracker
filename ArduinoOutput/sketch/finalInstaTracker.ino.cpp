@@ -128,7 +128,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
     Serial.println("got response to message");
     responseWait = false;
   }
-  if(!strcmp("error",payloadString)){
+  else if(!strcmp("error",payloadString)){
     Serial.println("got error");
     sprintf(text,"error 1");
     errorOn = true;
