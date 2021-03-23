@@ -59,6 +59,7 @@ struct {
   int val = 0;
   char username[20] = "";
   int firstWrite = 0;
+  int lastCount = 0;
 } data;
 
 void update_started() {
@@ -88,6 +89,9 @@ bool updateFirware(){
     switch (ret) {
       case HTTP_UPDATE_FAILED:
         Serial.printf("HTTP_UPDATE_FAILD Error (%d): %s\n", ESPhttpUpdate.getLastError(), ESPhttpUpdate.getLastErrorString().c_str());
+        sprintf(text,"error 2");
+        P.displayReset();
+        ESP.reset();
         break;
 
       case HTTP_UPDATE_NO_UPDATES:
@@ -116,6 +120,12 @@ void callback(char* topic, byte* payload, unsigned int length) {
   }else{
     errorOn = false;
     lastCount = atoi(payloadString);
+    sprintf(data.username,userName);
+    data.val = brightVal;
+    data.firstWrite = 0;
+    data.lastCount = lastCount;
+    EEPROM.put(addr,data);
+    EEPROM.commit();
     sprintf(text,"%d",lastCount);
   }
   sendMQTTRequest("gotMessage");
@@ -151,7 +161,7 @@ void getTime(char *psz, bool f = true)
 
 void handleRoot() {
   sprintf(postForms,"<html>  <head>    <title>Instatracker setup page</title>    <style>      body { background-color: light blue; font-family: Arial, Helvetica, Sans-Serif; Color: #000088; text-align: center;}      form { display: inline-block;}    </style>  </head>  <body onload=\"myFunction()\">    <h1>Instatracker setup page</h1><br>    <form method=\"post\" enctype=\"application/x-www-form-urlencoded\" action=\"/postform/\">      <label for=\"fname\">Insta Username:</label><br>      <input type=\"text\" name=\"username\" value=\"%s\"><br><br>      <label for=\"fname\">Brightness:</label><br>      <input type=\"number\" min=\"0\" max=\"15\" name=\"brightness\" value=\"%d\"><br><br>      <label for=\"fname\">Display a Clock?</label>      <input type=\"checkbox\" id=\"vehicle1\" name=\"vehicle1\" value=\"Bike\" %s onclick=\"myFunction()\"><br><br>      <label for=\"fname\" id=\"text3\" style=\"display:none\">Insta time:</label><br>      <input type=\"number\" min=\"0\" id=\"text4\"step=\"any\" min=\"0\" name=\"hello\" value=\"%.2f\" style=\"display:none\"><br><br>      <label for=\"fname\" id=\"text\" style=\"display:none\">Clock Time:</label><br>      <input type=\"number\" min=\"0\" id=\"text2\" step=\"any\" min=\"0\" name=\"new\" value=\"%.2f\" style=\"display:none\"><br><br>      <input type=\"submit\" value=\"Submit\">    </form>    <script>      function myFunction() {        var checkBox = document.getElementById(\"vehicle1\");        var text1 = document.getElementById(\"text\");        var text2 = document.getElementById(\"text2\");        var text3 = document.getElementById(\"text3\");        var text4 = document.getElementById(\"text4\");        if (checkBox.checked == true){          text1.style.display = \"inline-block\";          text2.style.display = \"inline-block\";          text3.style.display = \"inline-block\";          text4.style.display = \"inline-block\";        } else {           text1.style.display = \"none\";           text2.style.display = \"none\";           text3.style.display = \"none\";           text4.style.display = \"none\";        }      }    </script>  </body></html>",userName,brightVal,(haveClock
-# 196 "/home/aranjello/Documents/instaTracker/finalInstaTracker/finalInstaTracker.ino"
+# 206 "/home/aranjello/Documents/instaTracker/finalInstaTracker/finalInstaTracker.ino"
                                        ? "checked":""),instaTime/60000.0,timeTime/60000.0);
   server.send(200, "text/html", postForms);
 }
@@ -189,9 +199,13 @@ void handleForm() {
     }
     server.send(200, "text/html", "<meta http-equiv = \"refresh\" content = \"0;url = \/\" />");
     Serial.println(message);
+    if(strcmp(data.username,userName)){
+      lastCount = 0;
+    }
     sprintf(data.username,userName);
     data.val = brightVal;
     data.firstWrite = 0;
+    data.lastCount = 0;
     EEPROM.put(addr,data);
     EEPROM.commit();
     sendMQTTRequest(userName);
@@ -210,6 +224,7 @@ void setup() {
   EEPROM.get(addr,data);
   sprintf(userName,data.username);
   brightVal = data.val;
+  lastCount = data.lastCount;
   P.begin();
   P.setIntensity(brightVal);
   P.displayClear();
@@ -224,6 +239,7 @@ void setup() {
   if(data.firstWrite != 0){
     sprintf(userName,"%s","Enter Username");
     brightVal = 0;
+    lastCount = 0;
   }
   sprintf(text,"%s","connect");
   P.displayReset();
@@ -311,7 +327,9 @@ void loop() {
         Serial.println("Time time done");
         P.setPause(0);
         P.setSpeed(10);
-        sprintf(text,"%d",lastCount);
+        if(!errorOn && lastCount != 0){
+         sprintf(text,"%d",lastCount);
+        }
         //P.setTextBuffer(text);
       }else if(P.displayAnimate() && !doTime && millis() - currentTime > instaTime){
         currentTime = millis();

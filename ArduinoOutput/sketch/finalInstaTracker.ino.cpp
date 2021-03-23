@@ -60,35 +60,36 @@ struct {
   int val = 0;
   char username[20] = "";
   int firstWrite = 0;
+  int lastCount = 0;
 } data;
 
-#line 63 "/home/aranjello/Documents/instaTracker/finalInstaTracker/finalInstaTracker.ino"
+#line 64 "/home/aranjello/Documents/instaTracker/finalInstaTracker/finalInstaTracker.ino"
 void update_started();
-#line 70 "/home/aranjello/Documents/instaTracker/finalInstaTracker/finalInstaTracker.ino"
+#line 71 "/home/aranjello/Documents/instaTracker/finalInstaTracker/finalInstaTracker.ino"
 void update_finished();
-#line 74 "/home/aranjello/Documents/instaTracker/finalInstaTracker/finalInstaTracker.ino"
+#line 75 "/home/aranjello/Documents/instaTracker/finalInstaTracker/finalInstaTracker.ino"
 void update_progress(int cur, int total);
-#line 78 "/home/aranjello/Documents/instaTracker/finalInstaTracker/finalInstaTracker.ino"
+#line 79 "/home/aranjello/Documents/instaTracker/finalInstaTracker/finalInstaTracker.ino"
 void update_error(int err);
-#line 82 "/home/aranjello/Documents/instaTracker/finalInstaTracker/finalInstaTracker.ino"
+#line 83 "/home/aranjello/Documents/instaTracker/finalInstaTracker/finalInstaTracker.ino"
 bool updateFirware();
-#line 102 "/home/aranjello/Documents/instaTracker/finalInstaTracker/finalInstaTracker.ino"
+#line 106 "/home/aranjello/Documents/instaTracker/finalInstaTracker/finalInstaTracker.ino"
 void callback(char* topic, byte* payload, unsigned int length);
-#line 123 "/home/aranjello/Documents/instaTracker/finalInstaTracker/finalInstaTracker.ino"
+#line 133 "/home/aranjello/Documents/instaTracker/finalInstaTracker/finalInstaTracker.ino"
 void reconnect();
-#line 151 "/home/aranjello/Documents/instaTracker/finalInstaTracker/finalInstaTracker.ino"
+#line 161 "/home/aranjello/Documents/instaTracker/finalInstaTracker/finalInstaTracker.ino"
 void handleRoot();
-#line 200 "/home/aranjello/Documents/instaTracker/finalInstaTracker/finalInstaTracker.ino"
+#line 210 "/home/aranjello/Documents/instaTracker/finalInstaTracker/finalInstaTracker.ino"
 void handleForm();
-#line 245 "/home/aranjello/Documents/instaTracker/finalInstaTracker/finalInstaTracker.ino"
+#line 259 "/home/aranjello/Documents/instaTracker/finalInstaTracker/finalInstaTracker.ino"
 void handleNotFound();
-#line 249 "/home/aranjello/Documents/instaTracker/finalInstaTracker/finalInstaTracker.ino"
+#line 263 "/home/aranjello/Documents/instaTracker/finalInstaTracker/finalInstaTracker.ino"
 void setup();
-#line 321 "/home/aranjello/Documents/instaTracker/finalInstaTracker/finalInstaTracker.ino"
+#line 337 "/home/aranjello/Documents/instaTracker/finalInstaTracker/finalInstaTracker.ino"
 void sendMQTTRequest(char* request);
-#line 335 "/home/aranjello/Documents/instaTracker/finalInstaTracker/finalInstaTracker.ino"
+#line 351 "/home/aranjello/Documents/instaTracker/finalInstaTracker/finalInstaTracker.ino"
 void loop();
-#line 63 "/home/aranjello/Documents/instaTracker/finalInstaTracker/finalInstaTracker.ino"
+#line 64 "/home/aranjello/Documents/instaTracker/finalInstaTracker/finalInstaTracker.ino"
 void update_started() {
   sprintf(text,"update");
   P.displayReset();
@@ -116,6 +117,9 @@ bool updateFirware(){
     switch (ret) {
       case HTTP_UPDATE_FAILED:
         Serial.printf("HTTP_UPDATE_FAILD Error (%d): %s\n", ESPhttpUpdate.getLastError(), ESPhttpUpdate.getLastErrorString().c_str());
+        sprintf(text,"error 2");
+        P.displayReset();
+        ESP.reset();
         break;
 
       case HTTP_UPDATE_NO_UPDATES:
@@ -144,6 +148,12 @@ void callback(char* topic, byte* payload, unsigned int length) {
   }else{
     errorOn = false;
     lastCount = atoi(payloadString);
+    sprintf(data.username,userName);
+    data.val = brightVal;
+    data.firstWrite = 0;
+    data.lastCount = lastCount;
+    EEPROM.put(addr,data);
+    EEPROM.commit();
     sprintf(text,"%d",lastCount);
   }
   sendMQTTRequest("gotMessage");
@@ -259,9 +269,13 @@ void handleForm() {
     }
     server.send(200, "text/html", "<meta http-equiv = \"refresh\" content = \"0;url = \/\" />");
     Serial.println(message);
+    if(strcmp(data.username,userName)){
+      lastCount = 0;
+    }
     sprintf(data.username,userName);
     data.val = brightVal;
     data.firstWrite = 0;
+    data.lastCount = 0;
     EEPROM.put(addr,data);
     EEPROM.commit();
     sendMQTTRequest(userName);
@@ -280,6 +294,7 @@ void setup() {
   EEPROM.get(addr,data);
   sprintf(userName,data.username);
   brightVal = data.val;
+  lastCount = data.lastCount;
   P.begin();
   P.setIntensity(brightVal);
   P.displayClear();
@@ -294,6 +309,7 @@ void setup() {
   if(data.firstWrite != 0){
     sprintf(userName,"%s","Enter Username");
     brightVal = 0;
+    lastCount = 0;
   }
   sprintf(text,"%s","connect");
   P.displayReset();
@@ -381,7 +397,9 @@ void loop() {
         Serial.println("Time time done");
         P.setPause(0);
         P.setSpeed(10);
-        sprintf(text,"%d",lastCount);
+        if(!errorOn && lastCount != 0){
+         sprintf(text,"%d",lastCount);
+        }
         //P.setTextBuffer(text);
       }else if(P.displayAnimate() && !doTime && millis() - currentTime > instaTime){
         currentTime = millis();

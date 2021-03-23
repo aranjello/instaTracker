@@ -58,6 +58,7 @@ struct {
   int val = 0;
   char username[20] = "";
   int firstWrite = 0;
+  int lastCount = 0;
 } data;
 
 void update_started() {
@@ -87,6 +88,9 @@ bool updateFirware(){
     switch (ret) {
       case HTTP_UPDATE_FAILED:
         Serial.printf("HTTP_UPDATE_FAILD Error (%d): %s\n", ESPhttpUpdate.getLastError(), ESPhttpUpdate.getLastErrorString().c_str());
+        sprintf(text,"error 2");
+        P.displayReset();
+        ESP.reset();
         break;
 
       case HTTP_UPDATE_NO_UPDATES:
@@ -115,6 +119,12 @@ void callback(char* topic, byte* payload, unsigned int length) {
   }else{
     errorOn = false;
     lastCount = atoi(payloadString);
+    sprintf(data.username,userName);
+    data.val = brightVal;
+    data.firstWrite = 0;
+    data.lastCount = lastCount;
+    EEPROM.put(addr,data);
+    EEPROM.commit();
     sprintf(text,"%d",lastCount);
   }
   sendMQTTRequest("gotMessage");
@@ -230,9 +240,13 @@ void handleForm() {
     }
     server.send(200, "text/html", "<meta http-equiv = \"refresh\" content = \"0;url = \/\" />");
     Serial.println(message);
+    if(strcmp(data.username,userName)){
+      lastCount = 0;
+    }
     sprintf(data.username,userName);
     data.val = brightVal;
     data.firstWrite = 0;
+    data.lastCount = 0;
     EEPROM.put(addr,data);
     EEPROM.commit();
     sendMQTTRequest(userName);
@@ -251,6 +265,7 @@ void setup() {
   EEPROM.get(addr,data);
   sprintf(userName,data.username);
   brightVal = data.val;
+  lastCount = data.lastCount;
   P.begin();
   P.setIntensity(brightVal);
   P.displayClear();
@@ -265,6 +280,7 @@ void setup() {
   if(data.firstWrite != 0){
     sprintf(userName,"%s","Enter Username");
     brightVal = 0;
+    lastCount = 0;
   }
   sprintf(text,"%s","connect");
   P.displayReset();
@@ -352,7 +368,9 @@ void loop() {
         Serial.println("Time time done");
         P.setPause(0);
         P.setSpeed(10);
-        sprintf(text,"%d",lastCount);
+        if(!errorOn && lastCount != 0){
+         sprintf(text,"%d",lastCount);
+        }
         //P.setTextBuffer(text);
       }else if(P.displayAnimate() && !doTime && millis() - currentTime > instaTime){
         currentTime = millis();
