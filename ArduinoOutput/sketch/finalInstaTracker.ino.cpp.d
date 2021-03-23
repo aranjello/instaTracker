@@ -168,4 +168,5 @@
  /home/aranjello/Arduino/libraries/ArduinoJson/src/ArduinoJson/Configuration.hpp \
  /home/aranjello/.arduino15/packages/esp8266/hardware/esp8266/2.7.4/libraries/ESP8266HTTPClient/src/ESP8266HTTPClient.h \
  /home/aranjello/Arduino/libraries/PubSubClient/src/PubSubClient.h \
- /home/aranjello/.arduino15/packages/esp8266/hardware/esp8266/2.7.4/libraries/ESP8266httpUpdate/src/ESP8266httpUpdate.h
+ /home/aranjello/.arduino15/packages/esp8266/hardware/esp8266/2.7.4/libraries/ESP8266httpUpdate/src/ESP8266httpUpdate.h \
+ /home/aranjello/.arduino15/packages/esp8266/hardware/esp8266/2.7.4/libraries/EEPROM/EEPROM.h

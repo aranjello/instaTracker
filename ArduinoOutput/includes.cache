@@ -71,6 +71,11 @@
   },
   {
     "Sourcefile": "/home/aranjello/Documents/instaTracker/ArduinoOutput/sketch/finalInstaTracker.ino.cpp",
+    "Include": "EEPROM.h",
+    "Includepath": "/home/aranjello/.arduino15/packages/esp8266/hardware/esp8266/2.7.4/libraries/EEPROM"
+  },
+  {
+    "Sourcefile": "/home/aranjello/Documents/instaTracker/ArduinoOutput/sketch/finalInstaTracker.ino.cpp",
     "Include": "",
     "Includepath": null
   },
@@ -306,6 +311,11 @@
   },
   {
     "Sourcefile": "/home/aranjello/.arduino15/packages/esp8266/hardware/esp8266/2.7.4/libraries/ESP8266httpUpdate/src/ESP8266httpUpdate.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/aranjello/.arduino15/packages/esp8266/hardware/esp8266/2.7.4/libraries/EEPROM/EEPROM.cpp",
     "Include": "",
     "Includepath": null
   }

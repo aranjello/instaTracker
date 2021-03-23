@@ -8,11 +8,12 @@
 #include <ESP8266HTTPClient.h>
 #include <PubSubClient.h>
 #include <ESP8266httpUpdate.h>
+#include <EEPROM.h>
 
 #define HARDWARE_TYPE MD_MAX72XX::FC16_HW
 #define MAX_DEVICES 4
 #define CS_PIN    D6
-#define versionNum 1
+#define versionNum 2
 
 char stringUpdate[50];
 char unique_ID[50];
@@ -47,9 +48,17 @@ long responseTimer = 0;
 const char* mqtt_server = "goodTimes.mywire.org";
 
 char postForms[4096];
-char text[50];
+char text[20];
 char userName[50];
 bool flashing = true;
+
+uint addr = 0;
+
+struct { 
+  int val = 0;
+  char username[20] = "";
+  int firstWrite = 0;
+} data;
 
 void update_started() {
   sprintf(text,"update");
@@ -221,6 +230,11 @@ void handleForm() {
     }
     server.send(200, "text/html", "<meta http-equiv = \"refresh\" content = \"0;url = \/\" />");
     Serial.println(message);
+    sprintf(data.username,userName);
+    data.val = brightVal;
+    data.firstWrite = 0;
+    EEPROM.put(addr,data);
+    EEPROM.commit();
     sendMQTTRequest(userName);
     firstResponse = true;
     sprintf(text,"loading");
@@ -233,6 +247,10 @@ void handleNotFound() {
 }
 
 void setup() {
+  EEPROM.begin(512);
+  EEPROM.get(addr,data);
+  sprintf(userName,data.username);
+  brightVal = data.val;
   P.begin();
   P.setIntensity(brightVal);
   P.displayClear();
@@ -244,8 +262,13 @@ void setup() {
   P.setPause(0);
   P.setSpeed(250);
   P.setTextBuffer(text);
-  sprintf(userName,"%s","Enter Username");
-  sprintf(text,"%s","test");
+  if(data.firstWrite != 0){
+    sprintf(userName,"%s","Enter Username");
+    brightVal = 0;
+  }
+  sprintf(text,"%s","connect");
+  P.displayReset();
+  P.displayAnimate();
   WiFi.mode(WIFI_STA); // explicitly set mode, esp defaults to STA+AP  
   Serial.begin(115200);
   Serial.setDebugOutput(true);  
@@ -280,6 +303,7 @@ void setup() {
   timeClient.begin();
   timeClient.setTimeOffset(offset);
   sprintf(text, "%s", WiFi.localIP().toString().c_str());
+  Serial.println(text);
   P.setTextEffect(PA_SCROLL_RIGHT,PA_SCROLL_RIGHT);
   server.on("/", handleRoot);
 

@@ -9,6 +9,7 @@
 # 9 "/home/aranjello/Documents/instaTracker/finalInstaTracker/finalInstaTracker.ino" 2
 # 10 "/home/aranjello/Documents/instaTracker/finalInstaTracker/finalInstaTracker.ino" 2
 # 11 "/home/aranjello/Documents/instaTracker/finalInstaTracker/finalInstaTracker.ino" 2
+# 12 "/home/aranjello/Documents/instaTracker/finalInstaTracker/finalInstaTracker.ino" 2
 
 
 
@@ -48,9 +49,17 @@ long responseTimer = 0;
 const char* mqtt_server = "goodTimes.mywire.org";
 
 char postForms[4096];
-char text[50];
+char text[20];
 char userName[50];
 bool flashing = true;
+
+uint addr = 0;
+
+struct {
+  int val = 0;
+  char username[20] = "";
+  int firstWrite = 0;
+} data;
 
 void update_started() {
   sprintf(text,"update");
@@ -74,7 +83,7 @@ void update_error(int err) {
 bool updateFirware(){
 
     t_httpUpdate_return ret;
-    sprintf(stringUpdate,"http://goodtimes.mywire.org:5000/?version=%d",1);
+    sprintf(stringUpdate,"http://goodtimes.mywire.org:5000/?version=%d",2);
     ret=ESPhttpUpdate.update(espClient,stringUpdate); // **************** This is the line that "does the business"   
     switch (ret) {
       case HTTP_UPDATE_FAILED:
@@ -142,7 +151,7 @@ void getTime(char *psz, bool f = true)
 
 void handleRoot() {
   sprintf(postForms,"<html>  <head>    <title>Instatracker setup page</title>    <style>      body { background-color: light blue; font-family: Arial, Helvetica, Sans-Serif; Color: #000088; text-align: center;}      form { display: inline-block;}    </style>  </head>  <body onload=\"myFunction()\">    <h1>Instatracker setup page</h1><br>    <form method=\"post\" enctype=\"application/x-www-form-urlencoded\" action=\"/postform/\">      <label for=\"fname\">Insta Username:</label><br>      <input type=\"text\" name=\"username\" value=\"%s\"><br><br>      <label for=\"fname\">Brightness:</label><br>      <input type=\"number\" min=\"0\" max=\"15\" name=\"brightness\" value=\"%d\"><br><br>      <label for=\"fname\">Display a Clock?</label>      <input type=\"checkbox\" id=\"vehicle1\" name=\"vehicle1\" value=\"Bike\" %s onclick=\"myFunction()\"><br><br>      <label for=\"fname\" id=\"text3\" style=\"display:none\">Insta time:</label><br>      <input type=\"number\" min=\"0\" id=\"text4\"step=\"any\" min=\"0\" name=\"hello\" value=\"%.2f\" style=\"display:none\"><br><br>      <label for=\"fname\" id=\"text\" style=\"display:none\">Clock Time:</label><br>      <input type=\"number\" min=\"0\" id=\"text2\" step=\"any\" min=\"0\" name=\"new\" value=\"%.2f\" style=\"display:none\"><br><br>      <input type=\"submit\" value=\"Submit\">    </form>    <script>      function myFunction() {        var checkBox = document.getElementById(\"vehicle1\");        var text1 = document.getElementById(\"text\");        var text2 = document.getElementById(\"text2\");        var text3 = document.getElementById(\"text3\");        var text4 = document.getElementById(\"text4\");        if (checkBox.checked == true){          text1.style.display = \"inline-block\";          text2.style.display = \"inline-block\";          text3.style.display = \"inline-block\";          text4.style.display = \"inline-block\";        } else {           text1.style.display = \"none\";           text2.style.display = \"none\";           text3.style.display = \"none\";           text4.style.display = \"none\";        }      }    </script>  </body></html>",userName,brightVal,(haveClock
-# 187 "/home/aranjello/Documents/instaTracker/finalInstaTracker/finalInstaTracker.ino"
+# 196 "/home/aranjello/Documents/instaTracker/finalInstaTracker/finalInstaTracker.ino"
                                        ? "checked":""),instaTime/60000.0,timeTime/60000.0);
   server.send(200, "text/html", postForms);
 }
@@ -180,6 +189,11 @@ void handleForm() {
     }
     server.send(200, "text/html", "<meta http-equiv = \"refresh\" content = \"0;url = \/\" />");
     Serial.println(message);
+    sprintf(data.username,userName);
+    data.val = brightVal;
+    data.firstWrite = 0;
+    EEPROM.put(addr,data);
+    EEPROM.commit();
     sendMQTTRequest(userName);
     firstResponse = true;
     sprintf(text,"loading");
@@ -192,6 +206,10 @@ void handleNotFound() {
 }
 
 void setup() {
+  EEPROM.begin(512);
+  EEPROM.get(addr,data);
+  sprintf(userName,data.username);
+  brightVal = data.val;
   P.begin();
   P.setIntensity(brightVal);
   P.displayClear();
@@ -203,8 +221,13 @@ void setup() {
   P.setPause(0);
   P.setSpeed(250);
   P.setTextBuffer(text);
-  sprintf(userName,"%s","Enter Username");
-  sprintf(text,"%s","test");
+  if(data.firstWrite != 0){
+    sprintf(userName,"%s","Enter Username");
+    brightVal = 0;
+  }
+  sprintf(text,"%s","connect");
+  P.displayReset();
+  P.displayAnimate();
   WiFi.mode(WIFI_STA); // explicitly set mode, esp defaults to STA+AP  
   Serial.begin(115200);
   Serial.setDebugOutput(true);
@@ -239,6 +262,7 @@ void setup() {
   timeClient.begin();
   timeClient.setTimeOffset(offset);
   sprintf(text, "%s", WiFi.localIP().toString().c_str());
+  Serial.println(text);
   P.setTextEffect(PA_SCROLL_RIGHT,PA_SCROLL_RIGHT);
   server.on("/", handleRoot);
 

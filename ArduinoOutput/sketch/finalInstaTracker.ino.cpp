@@ -10,11 +10,12 @@
 #include <ESP8266HTTPClient.h>
 #include <PubSubClient.h>
 #include <ESP8266httpUpdate.h>
+#include <EEPROM.h>
 
 #define HARDWARE_TYPE MD_MAX72XX::FC16_HW
 #define MAX_DEVICES 4
 #define CS_PIN    D6
-#define versionNum 1
+#define versionNum 2
 
 char stringUpdate[50];
 char unique_ID[50];
@@ -49,37 +50,45 @@ long responseTimer = 0;
 const char* mqtt_server = "goodTimes.mywire.org";
 
 char postForms[4096];
-char text[50];
+char text[20];
 char userName[50];
 bool flashing = true;
 
-#line 54 "/home/aranjello/Documents/instaTracker/finalInstaTracker/finalInstaTracker.ino"
+uint addr = 0;
+
+struct { 
+  int val = 0;
+  char username[20] = "";
+  int firstWrite = 0;
+} data;
+
+#line 63 "/home/aranjello/Documents/instaTracker/finalInstaTracker/finalInstaTracker.ino"
 void update_started();
-#line 61 "/home/aranjello/Documents/instaTracker/finalInstaTracker/finalInstaTracker.ino"
+#line 70 "/home/aranjello/Documents/instaTracker/finalInstaTracker/finalInstaTracker.ino"
 void update_finished();
-#line 65 "/home/aranjello/Documents/instaTracker/finalInstaTracker/finalInstaTracker.ino"
+#line 74 "/home/aranjello/Documents/instaTracker/finalInstaTracker/finalInstaTracker.ino"
 void update_progress(int cur, int total);
-#line 69 "/home/aranjello/Documents/instaTracker/finalInstaTracker/finalInstaTracker.ino"
+#line 78 "/home/aranjello/Documents/instaTracker/finalInstaTracker/finalInstaTracker.ino"
 void update_error(int err);
-#line 73 "/home/aranjello/Documents/instaTracker/finalInstaTracker/finalInstaTracker.ino"
+#line 82 "/home/aranjello/Documents/instaTracker/finalInstaTracker/finalInstaTracker.ino"
 bool updateFirware();
-#line 93 "/home/aranjello/Documents/instaTracker/finalInstaTracker/finalInstaTracker.ino"
+#line 102 "/home/aranjello/Documents/instaTracker/finalInstaTracker/finalInstaTracker.ino"
 void callback(char* topic, byte* payload, unsigned int length);
-#line 114 "/home/aranjello/Documents/instaTracker/finalInstaTracker/finalInstaTracker.ino"
+#line 123 "/home/aranjello/Documents/instaTracker/finalInstaTracker/finalInstaTracker.ino"
 void reconnect();
-#line 142 "/home/aranjello/Documents/instaTracker/finalInstaTracker/finalInstaTracker.ino"
+#line 151 "/home/aranjello/Documents/instaTracker/finalInstaTracker/finalInstaTracker.ino"
 void handleRoot();
-#line 191 "/home/aranjello/Documents/instaTracker/finalInstaTracker/finalInstaTracker.ino"
+#line 200 "/home/aranjello/Documents/instaTracker/finalInstaTracker/finalInstaTracker.ino"
 void handleForm();
-#line 231 "/home/aranjello/Documents/instaTracker/finalInstaTracker/finalInstaTracker.ino"
+#line 245 "/home/aranjello/Documents/instaTracker/finalInstaTracker/finalInstaTracker.ino"
 void handleNotFound();
-#line 235 "/home/aranjello/Documents/instaTracker/finalInstaTracker/finalInstaTracker.ino"
+#line 249 "/home/aranjello/Documents/instaTracker/finalInstaTracker/finalInstaTracker.ino"
 void setup();
-#line 297 "/home/aranjello/Documents/instaTracker/finalInstaTracker/finalInstaTracker.ino"
+#line 321 "/home/aranjello/Documents/instaTracker/finalInstaTracker/finalInstaTracker.ino"
 void sendMQTTRequest(char* request);
-#line 311 "/home/aranjello/Documents/instaTracker/finalInstaTracker/finalInstaTracker.ino"
+#line 335 "/home/aranjello/Documents/instaTracker/finalInstaTracker/finalInstaTracker.ino"
 void loop();
-#line 54 "/home/aranjello/Documents/instaTracker/finalInstaTracker/finalInstaTracker.ino"
+#line 63 "/home/aranjello/Documents/instaTracker/finalInstaTracker/finalInstaTracker.ino"
 void update_started() {
   sprintf(text,"update");
   P.displayReset();
@@ -250,6 +259,11 @@ void handleForm() {
     }
     server.send(200, "text/html", "<meta http-equiv = \"refresh\" content = \"0;url = \/\" />");
     Serial.println(message);
+    sprintf(data.username,userName);
+    data.val = brightVal;
+    data.firstWrite = 0;
+    EEPROM.put(addr,data);
+    EEPROM.commit();
     sendMQTTRequest(userName);
     firstResponse = true;
     sprintf(text,"loading");
@@ -262,6 +276,10 @@ void handleNotFound() {
 }
 
 void setup() {
+  EEPROM.begin(512);
+  EEPROM.get(addr,data);
+  sprintf(userName,data.username);
+  brightVal = data.val;
   P.begin();
   P.setIntensity(brightVal);
   P.displayClear();
@@ -273,8 +291,13 @@ void setup() {
   P.setPause(0);
   P.setSpeed(250);
   P.setTextBuffer(text);
-  sprintf(userName,"%s","Enter Username");
-  sprintf(text,"%s","test");
+  if(data.firstWrite != 0){
+    sprintf(userName,"%s","Enter Username");
+    brightVal = 0;
+  }
+  sprintf(text,"%s","connect");
+  P.displayReset();
+  P.displayAnimate();
   WiFi.mode(WIFI_STA); // explicitly set mode, esp defaults to STA+AP  
   Serial.begin(115200);
   Serial.setDebugOutput(true);  
@@ -309,6 +332,7 @@ void setup() {
   timeClient.begin();
   timeClient.setTimeOffset(offset);
   sprintf(text, "%s", WiFi.localIP().toString().c_str());
+  Serial.println(text);
   P.setTextEffect(PA_SCROLL_RIGHT,PA_SCROLL_RIGHT);
   server.on("/", handleRoot);
 
